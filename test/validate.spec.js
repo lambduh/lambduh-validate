@@ -133,18 +133,55 @@ describe('validateS3Key', function() {
     })
   });
 
+  it('should resolve if startsWith requirements are met', function(done) {
+    var requirements = {
+      srcKey: {
+        startsWith: "events/"
+      }
+    }
+    var options = {
+      srcKey: "events/party/file.gif"
+    }
+    validate(requirements)(options).then(function(opts) {
+      if (opts && opts.srcKey) {
+        done()
+      } else {
+        done(new Error("Expected options object to be resolved"))
+      }
+    }, function(err) {
+      done(new Error("Expected validation to resolve"))
+    })
+  });
+
+  it('should reject if startsWith requirements are not met', function(done) {
+    var requirements = {
+      srcKey: {
+        startsWith: "events/"
+      }
+    }
+    var options = {
+      srcKey: "file.gif"
+    }
+    validate(requirements)(options).then(function(opts) {
+      done(new Error("Expected non startsWith-matching files to be rejected"))
+    }, function() {
+      done()
+    })
+  });
+
 
   describe('e2e -ish', function() {
 
-    it('should reject if requirements are met', function(done) {
+    it('should reject if only endsWithout requirements are met', function(done) {
       var requirements = {
         srcKey: {
-          endsWithout: ".gif",
-          endsWithout: "_\\d+\\.gif"
+          endsWith: ".gif",
+          endsWithout: "_\\d+\\.gif",
+          startsWith: "events/"
         }
       }
       var options = {
-        srcKey: "file_300.gif"
+        srcKey: "events/party/file_300.gif"
       }
       validate(requirements)(options).then(function(opts) {
         done(new Error("Expected *_d+.gif files to be rejected"))
@@ -153,15 +190,35 @@ describe('validateS3Key', function() {
       })
     });
 
-    it('should resolve if requirements are met', function(done) {
+    it('should reject if only startsWith requirements are met', function(done) {
       var requirements = {
         srcKey: {
-          endsWithout: ".gif",
-          endsWithout: "_\\d+\\.gif"
+          endsWith: "\\.gif",
+          endsWithout: "_\\d+\\.gif",
+          startsWith: "events/"
         }
       }
       var options = {
         srcKey: "file.gif"
+      }
+      validate(requirements)(options).then(function(opts) {
+        done(new Error("Expected non startsWith matching files to be rejected"))
+      }, function() {
+        done()
+      })
+    });
+
+
+    it('should resolve if requirements are met', function(done) {
+      var requirements = {
+        srcKey: {
+          endsWith: "\\.gif",
+          endsWithout: "_\\d+\\.gif",
+          startsWith: "events/"
+        }
+      }
+      var options = {
+        srcKey: "events/partytime/file.gif"
       }
       validate(requirements)(options).then(function(opts) {
         if (opts) {

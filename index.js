@@ -9,6 +9,10 @@ module.exports = function(requirements) {
       return new RegExp(endString + '$').test(string);
     }
 
+    function startsWith(string, startString) {
+      return new RegExp("^" + startString).test(string);
+    }
+
     if (!requirements) {
       def.resolve(options);
     } else {
@@ -25,6 +29,12 @@ module.exports = function(requirements) {
           if (requirements[key].endsWithout) {
             if (endsWith(options[key], requirements[key].endsWithout)) {
               def.reject(new Error('Invalid: ' + options[key] + ' ends with: ' + requirements[key].endsWith))
+            }
+          }
+
+          if (requirements[key].startsWith) {
+            if (!startsWith(options[key], requirements[key].startsWith)) {
+              def.reject(new Error('Invalid: ' + options[key] + ' does not start with: ' + requirements[key].endsWith))
             }
           }
 

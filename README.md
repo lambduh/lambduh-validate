@@ -57,8 +57,15 @@ validate({
     endsWithout: '_\\d+\\.gif'
   }
 })
+
+//enforce that options.srcKey starts with 'events/'
+validate({
+  srcKey: {
+    endsWithout: 'events/'
+  }
+})
 ```
 
-If any condition is not met, the promise will be rejected.
+If any requirements is not met, the promise will be rejected.
 
-Some work should be done here to prevent these rejects from retrying in Lambda (the default reaction to an error). This has not yet been implemented.
+Some work should be done here to prevent these rejects from retrying in Lambda (Lambda's default reaction to an error is to retry 3 times – the use-case here should not waste those computes unnecessarily). This has not yet been implemented, but could likely be done via a custom error object, or maybe a `noRetry` flag on the error.

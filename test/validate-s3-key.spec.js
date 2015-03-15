@@ -134,4 +134,49 @@ describe('validateS3Key', function() {
   });
 
 
+  describe('e2e -ish', function() {
+
+    it('should reject if requirements are met', function(done) {
+      var requirements = {
+        srcKey: {
+          endsWithout: ".gif",
+          endsWithout: "_\\d+\\.gif"
+        }
+      }
+      var options = {
+        srcKey: "file_300.gif"
+      }
+      validate(requirements)(options).then(function(opts) {
+        done(new Error("Expected *_d+.gif files to be rejected"))
+      }, function() {
+        done()
+      })
+    });
+
+    it('should resolve if requirements are met', function(done) {
+      var requirements = {
+        srcKey: {
+          endsWithout: ".gif",
+          endsWithout: "_\\d+\\.gif"
+        }
+      }
+      var options = {
+        srcKey: "file.gif"
+      }
+      validate(requirements)(options).then(function(opts) {
+        if (opts) {
+          expect(opts).to.equal(options)
+          done()
+        } else {
+          done(new Error("Expected resolved opts to match inputted options"))
+        }
+      }, function() {
+        done(new Error("Expected Validation to pass"))
+      })
+    });
+
+
+  })
+
+
 });

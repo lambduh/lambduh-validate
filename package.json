@@ -1,14 +1,14 @@
 {
-  "name": "lambduh-validate-s3-key",
+  "name": "lambduh-validate",
   "version": "1.0.0",
-  "description": "Resolve options or reject keys that you do not want to operate on",
+  "description": "Validates fields of your choice (like S3 keys that you do not want to operate on).",
   "main": "index.js",
   "scripts": {
     "test": "mocha test/*.spec.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/lambduh/lambduh-validate-s3-key.git"
+    "url": "https://github.com/lambduh/lambduh-validate.git"
   },
   "keywords": [
     "lambda",
@@ -20,9 +20,9 @@
   "author": "Russell Matney <russell.matney@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/lambduh/lambduh-validate-s3-key/issues"
+    "url": "https://github.com/lambduh/lambduh-validate/issues"
   },
-  "homepage": "https://github.com/lambduh/lambduh-validate-s3-key",
+  "homepage": "https://github.com/lambduh/lambduh-validate",
   "devDependencies": {
     "chai": "^2.1.1",
     "gulp": "^3.8.11",

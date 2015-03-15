@@ -15,7 +15,7 @@ describe('validateS3Key', function() {
     expect(validate()().then).to.exist
   });
 
-  it('should resolve the options object if no settings are inputted', function(done) {
+  it('should resolve the options object if no requirements are inputted', function(done) {
     var options = {
       key: 'val'
     }
@@ -32,13 +32,103 @@ describe('validateS3Key', function() {
   });
 
   it('should reject with an err if no options are inputted but requirements are set', function(done) {
-    var settings = {
+    var requirements = {
       srcKey: true
     }
-    validate(settings)().then(function(opts) {
+    validate(requirements)().then(function(opts) {
       done(new Error("Expected scenario to fail."))
     }, function(err) {
       expect(err).to.exist
+      done()
+    })
+  });
+
+  it('should resolve if required keys exist', function(done) {
+    var requirements = {
+      srcKey: true
+    }
+    var options = {
+      srcKey: "file.pdf"
+    }
+    validate(requirements)(options).then(function(opts) {
+      if (opts && opts.srcKey) {
+        done()
+      } else {
+        done(new Error("Expected options object to be resolved"))
+      }
+    }, function(err) {
+      done(new Error("Expected validation to resolve"))
+    })
+  });
+
+  it('should resolve if endsWith requirements are met', function(done) {
+    var requirements = {
+      srcKey: {
+        endsWith: ".pdf"
+      }
+    }
+    var options = {
+      srcKey: "file.pdf"
+    }
+    validate(requirements)(options).then(function(opts) {
+      if (opts && opts.srcKey) {
+        done()
+      } else {
+        done(new Error("Expected options object to be resolved"))
+      }
+    }, function(err) {
+      done(new Error("Expected validation to resolve"))
+    })
+  });
+
+  it('should reject if endsWith requirements are not met', function(done) {
+    var requirements = {
+      srcKey: {
+        endsWith: ".gif"
+      }
+    }
+    var options = {
+      srcKey: "file.pdf"
+    }
+    validate(requirements)(options).then(function(opts) {
+      done(new Error("Expected non .gif files to be rejected"))
+    }, function() {
+      done()
+    })
+  });
+
+  it('should resolve if endsWithout requirements are met', function(done) {
+    var requirements = {
+      srcKey: {
+        endsWithout: "_180.gif"
+      }
+    }
+    var options = {
+      srcKey: "file.gif"
+    }
+    validate(requirements)(options).then(function(opts) {
+      if (opts && opts.srcKey) {
+        done()
+      } else {
+        done(new Error("Expected options object to be resolved"))
+      }
+    }, function(err) {
+      done(new Error("Expected validation to resolve"))
+    })
+  });
+
+  it('should reject if endsWithout requirements are not met', function(done) {
+    var requirements = {
+      srcKey: {
+        endsWithout: "_\\d+\\.gif"
+      }
+    }
+    var options = {
+      srcKey: "file_300.gif"
+    }
+    validate(requirements)(options).then(function(opts) {
+      done(new Error("Expected *_d+.gif files to be rejected"))
+    }, function() {
       done()
     })
   });

@@ -1,19 +1,38 @@
 var Q = require('q');
 
-module.exports = function(settings) {
+module.exports = function(requirements) {
   return function(options) {
     var def = Q.defer();
     if (!options) { options = {} }
 
-    if (!settings) {
+    function endsWith(string, endString) {
+      return new RegExp(endString + '$').test(string);
+    }
+
+    if (!requirements) {
       def.resolve(options);
     } else {
-      for (key in settings) {
+      for (key in requirements) {
         if (!options[key]) {
           def.reject(new Error('Validate expected options to include: ' + key));
+        } else {
+          if (requirements[key].endsWith) {
+            if (!endsWith(options[key], requirements[key].endsWith)) {
+              def.reject(new Error('Invalid: ' + options[key] + ' does not end with: ' + requirements[key].endsWith))
+            }
+          }
+
+          if (requirements[key].endsWithout) {
+            if (endsWith(options[key], requirements[key].endsWithout)) {
+              def.reject(new Error('Invalid: ' + options[key] + ' ends with: ' + requirements[key].endsWith))
+            }
+          }
+
         }
       }
 
+      //gotten this far without invalidating
+      def.resolve(options)
     }
 
     return def.promise;

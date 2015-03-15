@@ -28,13 +28,13 @@ module.exports = function(requirements) {
 
           if (requirements[key].endsWithout) {
             if (endsWith(options[key], requirements[key].endsWithout)) {
-              def.reject(new Error('Invalid: ' + options[key] + ' ends with: ' + requirements[key].endsWith))
+              def.reject(new Error('Invalid: ' + options[key] + ' ends with: ' + requirements[key].endsWithout))
             }
           }
 
           if (requirements[key].startsWith) {
             if (!startsWith(options[key], requirements[key].startsWith)) {
-              def.reject(new Error('Invalid: ' + options[key] + ' does not start with: ' + requirements[key].endsWith))
+              def.reject(new Error('Invalid: ' + options[key] + ' does not start with: ' + requirements[key].startsWith))
             }
           }
 

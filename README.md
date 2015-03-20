@@ -34,7 +34,7 @@ exports.handler = function(event, context) {
 }
 ```
 
-This module takes a `requirements` object, where the keys are required fields on the passed `options` object. See the [general Lambduh README]() for info on the `options` object flow. (In short, an `options` object is expected to flow through the full promise chain, and modules are expected to act on it or pass it on, or both).
+This module takes a `requirements` object, where the keys are required fields on the passed `options` object. See the [general Lambduh README](https://github.com/lambduh/lambduh#usage---options-object-flow) for info on the `options` object flow. (In short, an `options` object is expected to flow through the full promise chain, and modules are expected to act on it or pass it on, or both).
 
 The `requirements` object has a few features that (I hope) are relatively intuitive:
 

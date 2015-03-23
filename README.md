@@ -1,6 +1,12 @@
 # lambduh-validate
 Validates fields of your choice (like S3 keys that you do not want to operate on).
 
+# Install
+
+```
+npm i --save lambduh-validate
+```
+
 # Usage
 
 ```javascript

@@ -7,35 +7,31 @@ describe('validateS3Key', function() {
     expect(validate).to.exist;
   });
 
-  it('should return a function', function() {
-    expect(validate()).to.be.a('function');
+  it('should return a promise', function() {
+    expect(validate().then).to.exist
   });
 
-  it('should return a function that returns a promise', function() {
-    expect(validate()().then).to.exist
-  });
-
-  it('should resolve the options object if no requirements are inputted', function(done) {
-    var options = {
+  it('should resolve the result object if no requirements are inputted', function(done) {
+    var result = {
       key: 'val'
     }
-    validate()(options).then(function(opts) {
-      if (opts) {
-        expect(opts).to.equal(options)
+    validate(result).then(function(res) {
+      if (res) {
+        expect(res).to.equal(res).and.exist;
         done()
       } else {
-        done(new Error("Expected options object to be resolved."))
+        done(new Error("Expected result object to be resolved."))
       }
     }, function() {
-      done(new Error("Expected options object to be resolved."))
+      done(new Error("Expected result object to be resolved."))
     })
   });
 
-  it('should reject with an err if no options are inputted but requirements are set', function(done) {
+  it('should reject with an err if no result are inputted but requirements are set', function(done) {
     var requirements = {
       srcKey: true
     }
-    validate(requirements)().then(function(opts) {
+    validate(null, requirements).then(function() {
       done(new Error("Expected scenario to fail."))
     }, function(err) {
       expect(err).to.exist
@@ -47,14 +43,14 @@ describe('validateS3Key', function() {
     var requirements = {
       srcKey: true
     }
-    var options = {
+    var result = {
       srcKey: "file.pdf"
     }
-    validate(requirements)(options).then(function(opts) {
-      if (opts && opts.srcKey) {
+    validate(result, requirements).then(function(res) {
+      if (res && res.srcKey) {
         done()
       } else {
-        done(new Error("Expected options object to be resolved"))
+        done(new Error("Expected result object to be resolved"))
       }
     }, function(err) {
       done(new Error("Expected validation to resolve"))
@@ -67,14 +63,14 @@ describe('validateS3Key', function() {
         endsWith: ".pdf"
       }
     }
-    var options = {
+    var result = {
       srcKey: "file.pdf"
     }
-    validate(requirements)(options).then(function(opts) {
-      if (opts && opts.srcKey) {
+    validate(result, requirements).then(function(res) {
+      if (res && res.srcKey) {
         done()
       } else {
-        done(new Error("Expected options object to be resolved"))
+        done(new Error("Expected result object to be resolved"))
       }
     }, function(err) {
       done(new Error("Expected validation to resolve"))
@@ -87,10 +83,10 @@ describe('validateS3Key', function() {
         endsWith: ".gif"
       }
     }
-    var options = {
+    var result = {
       srcKey: "file.pdf"
     }
-    validate(requirements)(options).then(function(opts) {
+    validate(result, requirements).then(function(res) {
       done(new Error("Expected non .gif files to be rejected"))
     }, function() {
       done()
@@ -103,14 +99,14 @@ describe('validateS3Key', function() {
         endsWithout: "_180.gif"
       }
     }
-    var options = {
+    var result = {
       srcKey: "file.gif"
     }
-    validate(requirements)(options).then(function(opts) {
-      if (opts && opts.srcKey) {
+    validate(result, requirements).then(function(res) {
+      if (res && res.srcKey) {
         done()
       } else {
-        done(new Error("Expected options object to be resolved"))
+        done(new Error("Expected result object to be resolved"))
       }
     }, function(err) {
       done(new Error("Expected validation to resolve"))
@@ -123,10 +119,10 @@ describe('validateS3Key', function() {
         endsWithout: "_\\d+\\.gif"
       }
     }
-    var options = {
+    var result = {
       srcKey: "file_300.gif"
     }
-    validate(requirements)(options).then(function(opts) {
+    validate(result, requirements).then(function(res) {
       done(new Error("Expected *_d+.gif files to be rejected"))
     }, function() {
       done()
@@ -139,14 +135,14 @@ describe('validateS3Key', function() {
         startsWith: "events/"
       }
     }
-    var options = {
+    var result = {
       srcKey: "events/party/file.gif"
     }
-    validate(requirements)(options).then(function(opts) {
-      if (opts && opts.srcKey) {
+    validate(result, requirements).then(function(res) {
+      if (res && res.srcKey) {
         done()
       } else {
-        done(new Error("Expected options object to be resolved"))
+        done(new Error("Expected result object to be resolved"))
       }
     }, function(err) {
       done(new Error("Expected validation to resolve"))
@@ -159,10 +155,10 @@ describe('validateS3Key', function() {
         startsWith: "events/"
       }
     }
-    var options = {
+    var result = {
       srcKey: "file.gif"
     }
-    validate(requirements)(options).then(function(opts) {
+    validate(result, requirements).then(function(res) {
       done(new Error("Expected non startsWith-matching files to be rejected"))
     }, function() {
       done()
@@ -180,10 +176,10 @@ describe('validateS3Key', function() {
           startsWith: "events/"
         }
       }
-      var options = {
+      var result = {
         srcKey: "events/party/file_300.gif"
       }
-      validate(requirements)(options).then(function(opts) {
+      validate(result, requirements).then(function(res) {
         done(new Error("Expected *_d+.gif files to be rejected"))
       }, function() {
         done()
@@ -198,10 +194,10 @@ describe('validateS3Key', function() {
           startsWith: "events/"
         }
       }
-      var options = {
+      var result = {
         srcKey: "file.gif"
       }
-      validate(requirements)(options).then(function(opts) {
+      validate(result, requirements).then(function(res) {
         done(new Error("Expected non startsWith matching files to be rejected"))
       }, function() {
         done()
@@ -217,23 +213,20 @@ describe('validateS3Key', function() {
           startsWith: "events/"
         }
       }
-      var options = {
+      var result = {
         srcKey: "events/partytime/file.gif"
       }
-      validate(requirements)(options).then(function(opts) {
-        if (opts) {
-          expect(opts).to.equal(options)
+      validate(result, requirements).then(function(res) {
+        if (res) {
+          expect(res).to.equal(result)
           done()
         } else {
-          done(new Error("Expected resolved opts to match inputted options"))
+          done(new Error("Expected resolved result to match inputted result"))
         }
       }, function() {
         done(new Error("Expected Validation to pass"))
       })
     });
 
-
   })
-
-
 });

@@ -1,6 +1,6 @@
 {
   "name": "lambduh-validate",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Validates fields of your choice (like S3 keys that you do not want to operate on).",
   "main": "index.js",
   "scripts": {
